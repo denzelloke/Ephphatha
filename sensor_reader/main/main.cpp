@@ -37,24 +37,6 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(
         adc_oneshot_config_channel(
             adc_handle,
-            ADC_CHANNEL_0,
-            &channel_config));
-
-    ESP_ERROR_CHECK(
-        adc_oneshot_config_channel(
-            adc_handle,
-            ADC_CHANNEL_1,
-            &channel_config));
-
-    ESP_ERROR_CHECK(
-        adc_oneshot_config_channel(
-            adc_handle,
-            ADC_CHANNEL_2,
-            &channel_config));
-
-    ESP_ERROR_CHECK(
-        adc_oneshot_config_channel(
-            adc_handle,
             ADC_CHANNEL_3,
             &channel_config));
 
@@ -64,65 +46,77 @@ extern "C" void app_main(void)
             ADC_CHANNEL_4,
             &channel_config));
 
-    // 6a. create bus config for I2C bus
-    i2c_master_bus_config_t bus_config = {};
-    bus_config.i2c_port = I2C_NUM_0; // i2c controller 0 (diff from gpio)
-    bus_config.sda_io_num = GPIO_NUM_8;
-    bus_config.scl_io_num = GPIO_NUM_9;
-    bus_config.clk_source = I2C_CLK_SRC_DEFAULT;
-    bus_config.glitch_ignore_cnt = 7;
-    bus_config.flags.enable_internal_pullup = true;
-
-    // 6b. create bus handle for I2C bus
-    i2c_master_bus_handle_t bus_handle;
-
-    // 6c. create I2C bus
     ESP_ERROR_CHECK(
-        i2c_new_master_bus(&bus_config, &bus_handle));
+        adc_oneshot_config_channel(
+            adc_handle,
+            ADC_CHANNEL_5,
+            &channel_config));
 
-    // 7a. config I2C device
-    // refer to MPU6050 datasheet - "MPU6050.pdf"
-    i2c_device_config_t i2c_device_config = {};
-    i2c_device_config.dev_addr_length = I2C_ADDR_BIT_LEN_7;
-    i2c_device_config.device_address = 0x68;  // AD0
-    i2c_device_config.scl_speed_hz = 100000; // 40kHz is max
-
-    // 7b. create master device handle
-    i2c_master_dev_handle_t i2c_device_handle;
-
-    // 7c. create device handle for mpu
     ESP_ERROR_CHECK(
-        i2c_master_bus_add_device(bus_handle, &i2c_device_config, &i2c_device_handle));
+        adc_oneshot_config_channel(
+            adc_handle,
+            ADC_CHANNEL_6,
+            &channel_config));
 
-    // 8. writes a register address, then reads its contents
-    uint8_t register_address = 0x75; // WHO_AM_I
-    uint8_t device_id = 0;
+    // // 6a. create bus config for I2C bus
+    // i2c_master_bus_config_t bus_config = {};
+    // bus_config.i2c_port = I2C_NUM_0; // i2c controller 0 (diff from gpio)
+    // bus_config.sda_io_num = GPIO_NUM_8;
+    // bus_config.scl_io_num = GPIO_NUM_9;
+    // bus_config.clk_source = I2C_CLK_SRC_DEFAULT;
+    // bus_config.glitch_ignore_cnt = 7;
+    // bus_config.flags.enable_internal_pullup = true;
 
-    esp_err_t status = i2c_master_transmit_receive(
-        i2c_device_handle,
-        &register_address,
-        sizeof(register_address),
-        &device_id,
-        sizeof(device_id),
-        100);
+    // // 6b. create bus handle for I2C bus
+    // i2c_master_bus_handle_t bus_handle;
 
-    if (status == ESP_OK)
-    {
-        printf("MPU6050 identity: 0x%02X\n", (unsigned int)device_id);
-    }
-    else
-    {
-        printf("MPU6050 read failed: %s\n", esp_err_to_name(status));
-    }
+    // // 6c. create I2C bus
+    // ESP_ERROR_CHECK(
+    //     i2c_new_master_bus(&bus_config, &bus_handle));
+
+    // // 7a. config I2C device
+    // // refer to MPU6050 datasheet - "MPU6050.pdf"
+    // i2c_device_config_t i2c_device_config = {};
+    // i2c_device_config.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+    // i2c_device_config.device_address = 0x68;  // AD0
+    // i2c_device_config.scl_speed_hz = 100000; // 40kHz is max
+
+    // // 7b. create master device handle
+    // i2c_master_dev_handle_t i2c_device_handle;
+
+    // // 7c. create device handle for mpu
+    // ESP_ERROR_CHECK(
+    //     i2c_master_bus_add_device(bus_handle, &i2c_device_config, &i2c_device_handle));
+
+    // // 8. writes a register address, then reads its contents
+    // uint8_t register_address = 0x75; // WHO_AM_I
+    // uint8_t device_id = 0;
+
+    // esp_err_t status = i2c_master_transmit_receive(
+    //     i2c_device_handle,
+    //     &register_address,
+    //     sizeof(register_address),
+    //     &device_id,
+    //     sizeof(device_id),
+    //     100);
+
+    // if (status == ESP_OK)
+    // {
+    //     printf("MPU6050 identity: 0x%02X\n", (unsigned int)device_id);
+    // }
+    // else
+    // {
+    //     printf("MPU6050 read failed: %s\n", esp_err_to_name(status));
+    // }
 
     while (1)
     {
-        int raw_thumb, raw_index, raw_middle, raw_ring, raw_pinky = 0;
+        int raw_thumb, raw_index, raw_middle, raw_pinky = 0;
 
         // read and print thumb flex sensor
         esp_err_t status_thumb = adc_oneshot_read(
             adc_handle,
-            ADC_CHANNEL_0,
+            ADC_CHANNEL_3,
             &raw_thumb);
         if (status_thumb == ESP_OK)
         {
@@ -136,7 +130,7 @@ extern "C" void app_main(void)
         // read and print index flex sensor
         esp_err_t status_index = adc_oneshot_read(
             adc_handle,
-            ADC_CHANNEL_1,
+            ADC_CHANNEL_4,
             &raw_index);
         if (status_index == ESP_OK)
         {
@@ -150,7 +144,7 @@ extern "C" void app_main(void)
         // read and print middle flex sensor
         esp_err_t status_middle = adc_oneshot_read(
             adc_handle,
-            ADC_CHANNEL_2,
+            ADC_CHANNEL_5,
             &raw_middle);
         if (status_middle == ESP_OK)
         {
@@ -161,24 +155,10 @@ extern "C" void app_main(void)
             printf("Middle ADC error: %s\n", esp_err_to_name(status_middle));
         }
 
-        // read and print ring flex sensor
-        esp_err_t status_ring = adc_oneshot_read(
-            adc_handle,
-            ADC_CHANNEL_3,
-            &raw_ring);
-        if (status_ring == ESP_OK)
-        {
-            printf("Ring raw:   %d\n", raw_ring);
-        }
-        else
-        {
-            printf("Ring ADC error: %s\n", esp_err_to_name(status_ring));
-        }
-
         // read and print pinky flex sensor
         esp_err_t status_pinky = adc_oneshot_read(
             adc_handle,
-            ADC_CHANNEL_4,
+            ADC_CHANNEL_6,
             &raw_pinky);
         if (status_pinky == ESP_OK)
         {
@@ -190,6 +170,6 @@ extern "C" void app_main(void)
         }
 
         // Pause for 50 ms before the next reading.
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(400));
     }
 }
