@@ -1,0 +1,20 @@
+{
+  "data_dir": "..",
+  "train_files": [
+    "glove_data_20261021_163349_498883.csv",
+    "glove_data_20261021_163605_782766.csv",
+    "glove_data_20261021_163833_153376.csv"
+  ],
+  "validation_files": ["glove_data_20261021_164039_221010.csv"],
+  "test_files": ["glove_data_20261021_164039_221786.csv"],
+  "output_dir": "artifacts",
+  "seed": 42,
+  "hidden_units": 16,
+  "learning_rate": 0.01,
+  "batch_size": 32,
+  "max_epochs": 800,
+  "patience": 80,
+  "l2": 0.0001,
+  "confidence_threshold": 0.8,
+  "refit_all": false
+}

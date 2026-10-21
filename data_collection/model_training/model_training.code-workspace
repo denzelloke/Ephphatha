@@ -1,0 +1,12 @@
+{
+  "folders": [
+    { "name": "Model training", "path": "." }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+    "files.exclude": { "**/__pycache__": true },
+    "search.exclude": { "**/.venv": true, "**/artifacts": true }
+  },
+  "extensions": { "recommendations": ["ms-python.python"] }
+}

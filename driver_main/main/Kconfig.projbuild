@@ -1,0 +1,36 @@
+menu "Flex Voice"
+    choice GLOVE_MODE
+        prompt "Operating mode"
+        default GLOVE_MODE_COLLECT
+        config GLOVE_MODE_COLLECT
+            bool "Collect labelled data (Python collector)"
+        config GLOVE_MODE_SPEAKER_TEST
+            bool "Speaker test (play track 1 once)"
+        config GLOVE_MODE_LIVE
+            bool "Live sensors -> model -> speaker"
+    endchoice
+    config GLOVE_VOLUME
+        int "DFPlayer volume (0 to 30)"
+        range 0 30
+        default 20
+    config GLOVE_SAMPLE_MS
+        int "Live delay between iterations (milliseconds)"
+        range 20 2000
+        default 100
+    config GLOVE_CONFIDENCE_PERCENT
+        int "Minimum confidence (%)"
+        range 1 100
+        default 80
+    config GLOVE_STABLE_SAMPLES
+        int "Consecutive confident predictions before accepting"
+        range 1 50
+        default 3
+    config GLOVE_COOLDOWN_MS
+        int "Minimum time between track requests (milliseconds)"
+        range 0 60000
+        default 1500
+    config GLOVE_ARENA_KB
+        int "Tensor arena size in internal RAM (KiB)"
+        range 16 256
+        default 64
+endmenu

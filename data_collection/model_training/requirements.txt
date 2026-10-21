@@ -1,0 +1,4 @@
+# Deliberate, reproducible CPU conversion baseline for Python 3.10/3.11.
+# TensorFlow 2.15 uses Keras 2 and produces the basic TFLite ops used by the driver.
+tensorflow==2.15.1
+numpy==1.26.4
